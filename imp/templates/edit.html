@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Data</title>
+</head>
+<body>
+    <h1>Edit Data</h1>
+    <form method="post">
+        <label for="column1">Column 1:</label>
+        <input type="text" name="column1" value="{{ data[1] }}"><br>
+        <label for="column2">Column 2:</label>
+        <input type="text" name="column2" value="{{ data[2] }}"><br>
+        <input type="submit" value="Update">
+    </form>
+    <a href="{{ url_for('show_data') }}">Cancel</a>
+</body>
+</html>

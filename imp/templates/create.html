@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Data</title>
+</head>
+<body>
+    <h1>Create Data</h1>
+    <form method="post">
+        <label for="column1">Column 1:</label>
+        <input type="text" name="column1"><br>
+        <label for="column2">Column 2:</label>
+        <input type="text" name="column2"><br>
+        <input type="submit" value="Create">
+    </form>
+    <a href="{{ url_for('show_data') }}">Show Data</a>
+</body>
+</html>

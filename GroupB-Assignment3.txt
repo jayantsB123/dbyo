@@ -1,0 +1,90 @@
+COLLECTION: emp11
+db.createCollection("emp11")
+
+db.emp11.insert({"emp_id":10984,"emp_name":"Aditi","dept_name":"Marketing","salary":80000});
+db.emp11.insert({"emp_id":10984,"emp_name":"Aditi","dept_name":"Marketing","salary":80000});
+db.emp11.insert({"emp_id":10354,"emp_name":"Seema","dept_name":"Computer","salary":65000}); 
+db.emp11.insert({"emp_id":12608,"emp_name":"Saumya","dept_name":"R&D","salary":45000});
+db.emp11.insert({"emp_id":17089,"emp_name":"Nitin","dept_name":"Marketing","salary":97000});
+db.emp11.insert({"emp_id":10678,"emp_name":"Deepa","dept_name":"Computer","salary":85000});
+db.emp11.insert({"emp_id":17042,"emp_name":"Manish","dept_name":"Marketing","salary":80000});
+db.emp11.insert({"emp_id":13602,"emp_name":"Shilpa","dept_name":"R&D","salary":15000});
+db.emp11.insert({"emp_id":19047,"emp_name":"Mohit","dept_name":"Computer","salary":75000});
+db.emp11.insert({"emp_id":13022,"emp_name":"Ragini","dept_name":"R&D","salary":18000});
+
+db.emp11.find().pretty();
+
+COLLECTION: Orders
+db.createCollection("Orders"); 
+
+db.Orders.insert({"cust_id":"abc123","s":"A","price":25});
+db.Orders.insert({"cust_id":"mnp456","s":"A","price":50});
+db.Orders.insert({"cust_id":"abc123","s":"A","price":75});
+db.Orders.insert({"cust_id":"mnp456","s":"A","price":15});
+db.Orders.insert({"cust_id":"abc123","s":"A","price":30});
+
+db.Orders.find().pretty();
+
+COLLECTION: zipcode1
+db.createCollection(“zipcode1”);
+
+db.zipcode1.insert({"_id" : 10280 ,"city" :" New York " ,"state" : " NY" , "pop" :557400} );
+db.zipcode1.insert({"_id" : 90503 ,"city" :" Los Angeles" ,"state":" California","pop" :33871648});
+db.zipcode1.insert({"_id" : 15902 ,"city" :" White Plains " ,"state":" NY","pop" :583170});
+db.zipcode1.insert({"_id" : 35001 ,"city" :" Jaisalmer" ,"state":" Rajasthan", "pop" :318284});
+db.zipcode1.insert({"_id" :04054 ,"city" :" Wells" ,"state":" England","pop":12000});
+db.zipcode1.insert({"_id" : 10456,"city" :"Mumbai"
+,"state":"Maharashtra","pop" :12400000});
+
+db.zipcode1.find().pretty();
+
+1.
+> var mapf =function(){emit(this.dept_name,this.salary);};
+> var redf =function(key,val){return Array.sum(val);};
+> db.emp11.mapReduce(mapf,redf,{out : "Salary_DeptWise"});
+{ "result" : "Salary_DeptWise", "ok" : 1 }
+
+db. Salary_DeptWise.find();
+
+2.
+>var mapfunct= function(){
+... emit(this.dept_name,{count:1}); };
+> var redfunct = function(dept_name,val){
+... var value={count:0};
+... for(i=0;i<val.length;i++){
+... value.count +=val[i].count; }
+... return value; };
+
+> db.emp11.mapReduce(mapfunct, redfunct,{out: "EmpPerDept"});
+{ "result" : "EmpPerDept", "ok" : 1 }
+> db.EmpPerDept.find();
+
+3.
+> var mapfun =function(){
+... emit(this.cust_id,this.price); };
+> var redufun =function(key,value){
+... return Array.sum(value); };
+> db.Orders.mapReduce(mapfun,redufun,{out:"Price_per_cust"});
+{ "result" : "Price_per_cust", "ok" : 1 }
+
+> db.Price_per_cust.find();
+
+4.
+> var mapf =function(){emit(this.dept_name,this.salary);};
+> var redf =function(key,val){return Array.sum(val);};
+> db.emp11.mapReduce(mapf,redf,{query:{dept_name:"Computer"},out : 
+"Salary_inCompDept"});
+{ "result" : "Salary_inCompDept", "ok" : 1 }
+
+> db.Salary_inCompDept.find();
+
+5.
+> var mapfunc= function(){
+if(this.state == " NY")
+... emit(this.city,this.pop);};
+> var reducefunc=function(city,pop){
+... return pop;};
+> db.zipcode1.mapReduce(mapfunc,reducefunc,{"out":"Popoulation_per_city"});
+{ "result" : "Popoulation_per_city", "ok" : 1 }
+
+> db.Popoulation_per_city.find();
